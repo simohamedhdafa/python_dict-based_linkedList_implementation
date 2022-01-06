@@ -22,6 +22,9 @@ def set_data(node, data):
 def has_next(node):
     return node['next'] != None
 
+def equals(node1, node2):
+    return get_data(node1) == get_data(node2)
+
 # type linkdlist
 
 def new_linkedList(list_nodes = []):
@@ -48,9 +51,8 @@ def get(l, index):
         keys = list(set(l.keys()))
         ks = []
         for v in l.values():
-            if get_next(v) != None:
-                ks.append(get_next(v))
-        u = list(set(keys)-set(ks))[0]
+            ks.append(get_next(v))
+        u = list(keys-set(ks))[0]
         # un autre etap
         i=0
         while True:
@@ -72,12 +74,11 @@ def get(l, index):
 def index_of(l, data):
     if not isEmpty(l):
         # clé du premier noeud :
-        keys = list(set(l.keys()))
+        keys = set(l.keys())
         ks = []
         for v in l.values():
-            if get_next(v) != None:
-                ks.append(get_next(v))
-        u = list(set(keys)-set(ks))[0]
+            ks.append(get_next(v))
+        u = list(keys-set(ks))[0]
         i=0
         while True:
             current = l[u]
@@ -95,18 +96,22 @@ def add(l, data):
     if isEmpty(l):
         l[0] = new_node(data)
     else:
-        keys = list(set(l.keys()))
+        # 1) nouveeau noeud [data , None] 
+        node = new_node(data)
+
+        # 2)
+        keys = set(l.keys())
         ks = []
         for v in l.values():
-            if get_next(v) != None:
-                ks.append(get_next(v))
-        u = list(set(keys)-set(ks))[0]
+            ks.append(get_next(v))
+        u = list(keys-set(ks))[0]
         while get_next(l[u]) != None:
             u = get_next(l[u])
+
+        # 3)   
         # generer un nouvel indice not in keys : index
         index = choice( list(set(range(max(keys)+2)) - set(keys)) )
-        # nouveeau noeud [data , None] 
-        node = new_node(data)
+        
         # ajouter nouveel indice cree
         # set_next[l[u], index]
         l[u]['next'] = index
@@ -120,12 +125,12 @@ def add_first(l, data):
         nd = new_node(data)
         l[0] = nd
     else:
-        keys = list(set(l.keys()))
+        keys = set(l.keys())
         ks = []
         for v in l.values():
             if get_next(v) != None:
                 ks.append(get_next(v))
-        u = list(set(keys)-set(ks))[0]
+        u = list(keys-set(ks))[0]
         nd = new_node(data, u)
         i = 0
         while True:
@@ -144,12 +149,11 @@ def add_at(l, data, index):
         k = 2022 if 2022 not in l else 2021
         l[k] = nd
     else:
-        keys = list(set(l.keys()))
+        keys = set(l.keys())
         ks = []
         for v in l.values():
-            if get_next(v) != None:
-                ks.append(get_next(v))
-        u = list(set(keys)-set(ks))[0]
+            ks.append(get_next(v))
+        u = list(keys-set(ks))[0]
         w = None
         i = 0
         while i<=index-1:
@@ -176,12 +180,11 @@ def remove_last(l):
         if size(l)==1:
             l={}
         else:
-            keys = list(set(l.keys()))
+            keys = set(l.keys())
             ks = []
             for v in l.values():
-                if get_next(v) != None:
-                    ks.append(get_next(v))
-            u = list(set(keys)-set(ks))[0]
+                ks.append(get_next(v))
+            u = list(keys-set(ks))[0]
             w = None
             while has_next(l[u]):
                 w = u
@@ -200,28 +203,39 @@ def remove_first(l):
     elif size(l)==1:
         l = {}
     else:
-        keys = list(set(l.keys()))
+        keys = set(l.keys())
         ks = []
         for v in l.values():
-            if get_next(v) != None:
-                ks.append(get_next(v))
-        u = list(set(keys)-set(ks))[0]
+            ks.append(get_next(v))
+        u = list(keys-set(ks))[0]
         l.pop(u)
 
 
 # remove index
+def remove(l, index):
+    pass
+
+
+def remove_all(l, data):
+    pass
+
+def remove_all(l, c):
+    pass
+
+# to_list
+def to_list(l):
+    pass
 
 # afficher linkedlist
 def display_linkedlist(l):
     if isEmpty(l):
         print('empty linkedlist : []')
     else:
-        keys = list(set(l.keys()))
+        keys = set(l.keys())
         ks = []
         for v in l.values():
-            if get_next(v) != None:
-                ks.append(get_next(v))
-        u = list(set(keys)-set(ks))[0]
+            ks.append(get_next(v))
+        u = list(keys-set(ks))[0]
         print('linkedlist : ->', sep='', end='')
         while(has_next(l[u])):
             print('[', str(get_data(l[u])), ']->', sep='', end='')
@@ -230,11 +244,18 @@ def display_linkedlist(l):
 
 
 if __name__ == '__main__':
-    famille = new_linkedList([new_node('bob'), new_node('toto'), new_node('momo'), {'data':'fafa','next':62}, new_node('sami')])
+    #famille = new_linkedList([new_node('bob'), new_node('toto'), new_node('momo'), {'data':'fafa','next':62}, new_node('sami')])
+    famille = new_linkedList([new_node('bob'), new_node('toto'), new_node('momo'), {'data':'momo','next':62}, new_node('sami')])
+    
     display_linkedlist(famille)
+    print(index_of(famille, 'momo'))
+    #print(index_of(famille, 'sami'))
+    #print(index_of(famille, 'mouad'))
+    
     remove_last(famille)
     display_linkedlist(famille)
     add_first(famille, 'adam')
     display_linkedlist(famille)
     add_at(famille, 'marshal', 2)
     display_linkedlist(famille)
+    
