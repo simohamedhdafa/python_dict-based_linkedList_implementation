@@ -45,14 +45,16 @@ def size(l):
 def isEmpty(l):
     return len(l)==0
 
+def first_key(l):
+    keys = set(l.keys())
+    ks = []
+    for v in l.values():
+        ks.append(get_next(v))
+    return list(keys-set(ks))[0]
+
 def get(l, index):
     if not isEmpty(l):
-        # clé du premier noeud :
-        keys = list(set(l.keys()))
-        ks = []
-        for v in l.values():
-            ks.append(get_next(v))
-        u = list(keys-set(ks))[0]
+        u = first_key(l)
         # un autre etap
         i=0
         while True:
@@ -74,11 +76,7 @@ def get(l, index):
 def index_of(l, data):
     if not isEmpty(l):
         # clé du premier noeud :
-        keys = set(l.keys())
-        ks = []
-        for v in l.values():
-            ks.append(get_next(v))
-        u = list(keys-set(ks))[0]
+        u = first_key(l)
         i=0
         while True:
             current = l[u]
@@ -100,11 +98,7 @@ def add(l, data):
         node = new_node(data)
 
         # 2)
-        keys = set(l.keys())
-        ks = []
-        for v in l.values():
-            ks.append(get_next(v))
-        u = list(keys-set(ks))[0]
+        u = first_key(l)
         while get_next(l[u]) != None:
             u = get_next(l[u])
 
@@ -125,12 +119,7 @@ def add_first(l, data):
         nd = new_node(data)
         l[0] = nd
     else:
-        keys = set(l.keys())
-        ks = []
-        for v in l.values():
-            if get_next(v) != None:
-                ks.append(get_next(v))
-        u = list(keys-set(ks))[0]
+        u = first_key(l)
         nd = new_node(data, u)
         i = 0
         while True:
@@ -149,11 +138,7 @@ def add_at(l, data, index):
         k = 2022 if 2022 not in l else 2021
         l[k] = nd
     else:
-        keys = set(l.keys())
-        ks = []
-        for v in l.values():
-            ks.append(get_next(v))
-        u = list(keys-set(ks))[0]
+        u = first_key(l)
         w = None
         i = 0
         while i<=index-1:
@@ -179,63 +164,95 @@ def remove_last(l):
     if not isEmpty(l):
         if size(l)==1:
             l={}
+            return True
         else:
-            keys = set(l.keys())
-            ks = []
-            for v in l.values():
-                ks.append(get_next(v))
-            u = list(keys-set(ks))[0]
+            u = first_key(l)
             w = None
             while has_next(l[u]):
                 w = u
                 u = get_next(l[u])
             l[w]['next'] = None
             l.pop(u)
+            return True
     else:
-        print('linkedlist is already empty!')
+        #print('linkedlist is already empty!')
+        return False
         
 
 
 # remove first
 def remove_first(l):
     if isEmpty(l):
-        print('linkedlist is already empty!')
+        #print('linkedlist is already empty!')
+        return False
     elif size(l)==1:
         l = {}
+        return True
     else:
-        keys = set(l.keys())
-        ks = []
-        for v in l.values():
-            ks.append(get_next(v))
-        u = list(keys-set(ks))[0]
+        u = first_key(l)
         l.pop(u)
+        return True
 
 
 # remove index
 def remove(l, index):
-    pass
+    if isEmpty(l):
+        #print("liste vide!")
+        return False
+    elif index==0:
+        # rendre remove_first fct booleenne
+        return remove_first(l)
+    elif index==size(l)-1:
+        # rendre remove_last fct booleenne
+        return remove_last(l)
+    elif index<0 or index>=size(l):
+        #print("indice en dehors de la liste")
+        return False
+    else:
+        v = first_key(l)
+        u = get_next(l[v])
+        for i in range(1, size(l)-1):
+            if i!=index:
+                v = u
+                u = get_next(l[u])
+            else:
+                l[v]['next'] = get_next(l[u])
+                l.pop(u)
+                break
+        return True
 
 
-def remove_all(l, data):
-    pass
+def remove_all_occ(l, data):
+    """supprimer de l toutes les occurences de data"""
+    compt = 0
+    while index_of(l, data) != -1:
+        #remove(l, index_of(l, data))
+        if remove(l, index_of(l, data)):
+            compt +=1
+    print(compt, 'suppressions effectuees')
 
 def remove_all(l, c):
+    """supprimer de l toutes les occurences des data de la sequence c"""
     pass
 
 # to_list
 def to_list(l):
-    pass
+    ll = []
+    if not isEmpty(l):
+        u = first_key(l)
+        while has_next(l[u]):
+            ll.append(get_data(l[u]))
+            u = get_next(l[u])
+        ll.append(get_data(l[u]))
+    return ll
+
 
 # afficher linkedlist
 def display_linkedlist(l):
     if isEmpty(l):
         print('empty linkedlist : []')
     else:
-        keys = set(l.keys())
-        ks = []
-        for v in l.values():
-            ks.append(get_next(v))
-        u = list(keys-set(ks))[0]
+        u = first_key(l)
         print('linkedlist : ->', sep='', end='')
         while(has_next(l[u])):
             print('[', str(get_data(l[u])), ']->', sep='', end='')
@@ -245,10 +262,21 @@ def display_linkedlist(l):
 
 if __name__ == '__main__':
     #famille = new_linkedList([new_node('bob'), new_node('toto'), new_node('momo'), {'data':'fafa','next':62}, new_node('sami')])
-    famille = new_linkedList([new_node('bob'), new_node('toto'), new_node('momo'), {'data':'momo','next':62}, new_node('sami')])
-    
+    famille = new_linkedList([new_node('bob'), new_node('bob'), new_node('bob'), {'data':'bob','next':62}, new_node('bob')])
+    #head = first_key
     display_linkedlist(famille)
-    print(index_of(famille, 'momo'))
+
+    remove_all_occ(famille, 'bob')
+    display_linkedlist(famille)
+
+    """
+    k = to_list(famille)
+    print(k)
+    print(to_list(new_linkedList()))
+    print(to_list(new_linkedList([{'data':'alice', 'next': None}])))
+    #print(index_of(famille, 'momo'))
+    #remove(famille, 2)
+    #display_linkedlist(famille)
     #print(index_of(famille, 'sami'))
     #print(index_of(famille, 'mouad'))
     
@@ -258,4 +286,5 @@ if __name__ == '__main__':
     display_linkedlist(famille)
     add_at(famille, 'marshal', 2)
     display_linkedlist(famille)
-    
+    """
+
