@@ -185,9 +185,6 @@ def remove_first(l):
     if isEmpty(l):
         #print('linkedlist is already empty!')
         return False
-    elif size(l)==1:
-        l = {}
-        return True
     else:
         u = first_key(l)
         l.pop(u)
@@ -225,10 +222,14 @@ def remove(l, index):
 def remove_all_occ(l, data):
     """supprimer de l toutes les occurences de data"""
     compt = 0
-    while index_of(l, data) != -1:
-        #remove(l, index_of(l, data))
-        if remove(l, index_of(l, data)):
+    i_data = index_of(l, data)
+    while i_data != -1:
+        if remove(l, i_data):
+            i_data = index_of(l, data)
             compt +=1
+            #display_linkedlist(l)
+            if compt >= 10:
+                break
     print(compt, 'suppressions effectuees')
 
 def remove_all(l, c):
@@ -286,5 +287,18 @@ if __name__ == '__main__':
     display_linkedlist(famille)
     add_at(famille, 'marshal', 2)
     display_linkedlist(famille)
+    
+    famille = new_linkedList([new_node('bob')])
+    print(index_of(famille, 'bob'))
+    remove(famille, index_of(famille, 'bob'))
+    print(index_of(famille, 'bob'))
+    
+    famille = new_linkedList([new_node('bob')])
+    display_linkedlist(famille)
+    print(index_of(famille, 'bob'))
+
+    remove(famille, index_of(famille, 'bob'))
+    display_linkedlist(famille)
+    print(index_of(famille, 'bob'))
     """
 
