@@ -220,21 +220,25 @@ def remove(l, index):
 
 
 def remove_all_occ(l, data):
-    """supprimer de l toutes les occurences de data"""
+    """
+    supprimer de l toutes les occurences de data
+    et retourner le nombre de noeux supprimes.
+    """
     compt = 0
     i_data = index_of(l, data)
     while i_data != -1:
         if remove(l, i_data):
             i_data = index_of(l, data)
             compt +=1
-            #display_linkedlist(l)
-            if compt >= 10:
-                break
-    print(compt, 'suppressions effectuees')
+    return compt
 
 def remove_all(l, c):
-    """supprimer de l toutes les occurences des data de la sequence c"""
-    pass
+    """supprimer de l toutes les occurences des elemeents de la sequence c"""
+    compt = 0
+    for d in c:
+        compt += remove_all_occ(l, d)
+    print(compt, 'supp realisees.')
+
 
 # to_list
 def to_list(l):
@@ -263,6 +267,7 @@ def display_linkedlist(l):
 
 if __name__ == '__main__':
     #famille = new_linkedList([new_node('bob'), new_node('toto'), new_node('momo'), {'data':'fafa','next':62}, new_node('sami')])
+    """
     famille = new_linkedList([new_node('bob'), new_node('bob'), new_node('bob'), {'data':'bob','next':62}, new_node('bob')])
     #head = first_key
     display_linkedlist(famille)
@@ -270,7 +275,7 @@ if __name__ == '__main__':
     remove_all_occ(famille, 'bob')
     display_linkedlist(famille)
 
-    """
+    
     k = to_list(famille)
     print(k)
     print(to_list(new_linkedList()))
@@ -301,4 +306,10 @@ if __name__ == '__main__':
     display_linkedlist(famille)
     print(index_of(famille, 'bob'))
     """
+
+    letters = new_linkedList([new_node(c) for c in "xxyzoxz"]) 
+    # [new_node(c) for c in "xxyzoxz"] => [{'x',None}, {'x',None}, {'y',None}, {'z',None}, {'o',None}, {'x',None}, {'z',None}]
+    display_linkedlist(letters)
+    remove_all(letters, ['y', 'o', 'z', 'x'])
+    display_linkedlist(letters)
 
